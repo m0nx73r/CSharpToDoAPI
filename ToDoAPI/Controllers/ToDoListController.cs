@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToDoAPI.Entities;
+using ToDoAPI.Repositories;
 
 namespace ToDoAPI.Controllers
 {
@@ -8,31 +9,31 @@ namespace ToDoAPI.Controllers
     [Route("api/todo")]
     public class ToDoListController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
 
-        public ToDoListController(ApplicationDbContext context)
+        private readonly IRepository _repository;
+        public ToDoListController(IRepository repository)
         {
-            this._context = context;
+            this._repository = repository;   
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDoItem>>> GetToDosAsync()
         {
-            var result = await _context.TodoItems.Where(item => item.IsDeleted == false).ToListAsync();
-            if (result == null)
+            var result = await _repository.GetToDosAsync();
+
+            if(result == null)
             {
-                return NotFound();
+                return null;
             }
 
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<ToDoItem>>> GetToDoAsync(int id)
+        public async Task<ActionResult<ToDoItem>> GetToDoAsync(int id)
         {
-            var result = await _context.TodoItems.FindAsync(id);
-
-            if (result is null)
+            var result = await _repository.GetToDoAsync(id);
+            if (result == null)
             {
                 return NotFound();
             }
@@ -44,42 +45,29 @@ namespace ToDoAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ToDoItem>> CreateToDo(string task, DateTime startDate, DateTime endDate, string createdUserId="system")
         {
-            DateTime dt = DateTime.Now;
-            ToDoItem item = new ToDoItem {
-                Task = task,
-                StartDate = startDate,
-                EndDate = endDate,
-                CreatedUserId = createdUserId,
-                CreatedDateTime = dt,
-                ModifiedDateTime = dt,
-                ModifiedUserId = "system",
-                IsDeleted = false,
-            };
+            var result = await _repository.CreateToDoAsync(
+                task,
+                startDate,
+                endDate,
+                createdUserId
+                );
 
-            _context.Add(item);
-            await _context.SaveChangesAsync();
-
-            return Ok(item);
+            return Ok(result);
         }
 
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<ToDoItem>> DeleteToDo(int id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var result = await _repository.DeleteToDoAsync(id);
 
-            if (todoItem == null)
+            if(result == null)
             {
                 return NotFound();
             }
 
-            todoItem.IsDeleted = true;
-            todoItem.ModifiedDateTime = DateTime.Now;
-            todoItem.ModifiedUserId = "system";
+            return Ok(result);
 
-            await _context.SaveChangesAsync();
-
-            return Ok(todoItem);
         }
 
 
@@ -87,20 +75,14 @@ namespace ToDoAPI.Controllers
 
         public async Task<ActionResult<ToDoItem>> UpdateToDo(int id, string task, DateTime startDate, DateTime endDate, string createdUserId = "system")
         {
-            ToDoItem? fieldToBeUpdated = await _context.TodoItems.FindAsync(id);
+            var result = await _repository.UpdateToDoAsync(id, task, startDate, endDate, createdUserId);
 
-            if (fieldToBeUpdated == null)
+            if(result == null)
             {
                 return NotFound();
             }
-            DateTime dt = DateTime.Now; 
-            fieldToBeUpdated.Task = task;
-            fieldToBeUpdated.StartDate = startDate;
-            fieldToBeUpdated.EndDate = endDate;
-            fieldToBeUpdated.CreatedUserId = createdUserId;
-            fieldToBeUpdated.ModifiedDateTime = dt;
-            await _context.SaveChangesAsync();
-            return Ok(fieldToBeUpdated); 
+
+            return Ok(result);
         }
 
     }
