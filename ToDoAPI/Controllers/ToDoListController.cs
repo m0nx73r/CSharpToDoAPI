@@ -8,17 +8,17 @@ namespace ToDoAPI.Controllers
     [Route("api/todo")]
     public class ToDoListController : ControllerBase
     {
-        private readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext _context;
 
         public ToDoListController(ApplicationDbContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ToDoItem>>> Get()
+        public async Task<ActionResult<IEnumerable<ToDoItem>>> GetToDosAsync()
         {
-            var result = await context.TodoItems.Where(item => item.IsDeleted == false).ToListAsync();
+            var result = await _context.TodoItems.Where(item => item.IsDeleted == false).ToListAsync();
             if (result == null)
             {
                 return NotFound();
@@ -27,21 +27,22 @@ namespace ToDoAPI.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<IEnumerable<ToDoItem>>> GetOne(int id)
-        //{
-        //    var result = await context.TodoItems.FindAsync(id);
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<ToDoItem>>> GetToDoAsync(int id)
+        {
+            var result = await _context.TodoItems.FindAsync(id);
 
-        //    if (result is null) {
-        //        return NotFound();
-        //    }
+            if (result is null)
+            {
+                return NotFound();
+            }
 
-        //    return Ok(result);
-        //}
+            return Ok(result);
+        }
 
 
         [HttpPost]
-        public async Task<ActionResult<ToDoItem>> Post(string task, DateTime startDate, DateTime endDate, string createdUserId="system")
+        public async Task<ActionResult<ToDoItem>> CreateToDo(string task, DateTime startDate, DateTime endDate, string createdUserId="system")
         {
             DateTime dt = DateTime.Now;
             ToDoItem item = new ToDoItem {
@@ -55,17 +56,17 @@ namespace ToDoAPI.Controllers
                 IsDeleted = false,
             };
 
-            context.Add(item);
-            await context.SaveChangesAsync();
+            _context.Add(item);
+            await _context.SaveChangesAsync();
 
             return Ok(item);
         }
 
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ToDoItem>> Delete(int id)
+        public async Task<ActionResult<ToDoItem>> DeleteToDo(int id)
         {
-            var todoItem = await context.TodoItems.FindAsync(id);
+            var todoItem = await _context.TodoItems.FindAsync(id);
 
             if (todoItem == null)
             {
@@ -76,7 +77,7 @@ namespace ToDoAPI.Controllers
             todoItem.ModifiedDateTime = DateTime.Now;
             todoItem.ModifiedUserId = "system";
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return Ok(todoItem);
         }
@@ -84,9 +85,9 @@ namespace ToDoAPI.Controllers
 
         [HttpPut("{id}")]
 
-        public async Task<ActionResult<ToDoItem>> Put(int id, string task, DateTime startDate, DateTime endDate, string createdUserId = "system")
+        public async Task<ActionResult<ToDoItem>> UpdateToDo(int id, string task, DateTime startDate, DateTime endDate, string createdUserId = "system")
         {
-            ToDoItem? fieldToBeUpdated = await context.TodoItems.FindAsync(id);
+            ToDoItem? fieldToBeUpdated = await _context.TodoItems.FindAsync(id);
 
             if (fieldToBeUpdated == null)
             {
@@ -98,7 +99,7 @@ namespace ToDoAPI.Controllers
             fieldToBeUpdated.EndDate = endDate;
             fieldToBeUpdated.CreatedUserId = createdUserId;
             fieldToBeUpdated.ModifiedDateTime = dt;
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return Ok(fieldToBeUpdated); 
         }
 
