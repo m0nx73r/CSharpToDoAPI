@@ -56,7 +56,7 @@ namespace ToDoAPI.Services.Implementation
             //converting ToDoRequest to ToDoItem (entity) 
             var item = _mapper.Map<ToDoItem>(requestItem);
             var result = await _toDoRepository.UpdateAsync(item);
-            //converting ToDoItem (entity) to ToDOResponse
+            //converting ToDoItem (entity) to ToDoResponse
             var response = _mapper.Map<ToDoResponse>(result);
             return response;
 ;        }
