@@ -1,6 +1,6 @@
-﻿namespace ToDoAPI.Entities
+﻿namespace ToDoAPI.Models.ResponseModels
 {
-    public class ToDoItem
+    public class ToDoResponse
     {
         public int Id { get; set; }
         public string? Task { get; set; }
@@ -12,5 +12,4 @@
         public DateTime? ModifiedDateTime { get; set; }
         public bool IsDeleted { get; set; }
     }
-
 }
