@@ -23,14 +23,14 @@ namespace ToDoAPI.DAL.Repositories.Implementation
                 Task = item.Task,
                 StartDate = item.StartDate,
                 EndDate = item.EndDate,
-                CreatedUserId = item.CreatedUserId,
+                CreatedUserId = "system",
                 CreatedDateTime = dt,
                 ModifiedDateTime = dt,
                 ModifiedUserId = "system",
                 IsDeleted = false,
             };
 
-            _context.Add(item);
+            _context.Add(new_item);
             await _context.SaveChangesAsync();
             return new_item;
         }
@@ -57,23 +57,12 @@ namespace ToDoAPI.DAL.Repositories.Implementation
         {
 
             var result = await _context.TodoItems.FindAsync(id);
-
-            if (result is null)
-            {
-                return null;
-            }
-
             return result;
         }
 
         public async Task<IEnumerable<ToDoItem>> GetToDoListAsync()
         {
             var result = await _context.TodoItems.Where(item => item.IsDeleted == false).ToListAsync();
-            if (result == null)
-            {
-                return null;
-            }
-
             return result;
         }
 

@@ -6,6 +6,7 @@ using ToDoAPI.DAL.Repositories.Interface;
 using ToDoAPI.Services.Interface;
 using AutoMapper;
 using ToDoAPI.Models.ResponseModels;
+using ToDoAPI.Models.RequestModels;
 
 namespace ToDoAPI.Services.Implementation
 {
@@ -14,15 +15,16 @@ namespace ToDoAPI.Services.Implementation
         private readonly IToDoRepository _toDoRepository;
         private readonly IMapper _mapper;
 
-        public ToDoService(IToDoRepository repository)
+        public ToDoService(IToDoRepository repository, IMapper mapper)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<ToDoItem, ToDoResponse>());
-            this._mapper = config.CreateMapper();
+            this._mapper = mapper;
             this._toDoRepository = repository;
         }
 
-        public async Task<ToDoResponse> CreateAsync(ToDoItem item)
+        public async Task<ToDoResponse> CreateAsync(ToDoRequest requestItem)
         {
+            var item = _mapper.Map<ToDoItem>(requestItem);
+
             var result = await _toDoRepository.CreateAsync(item);
             var response = _mapper.Map<ToDoResponse>(result);
             return response;
@@ -49,9 +51,12 @@ namespace ToDoAPI.Services.Implementation
             return response;
         }
 
-        public async Task<ToDoResponse> UpdateAsync(ToDoItem item)
+        public async Task<ToDoResponse> UpdateAsync(ToDoRequest requestItem)
         {
+            //converting ToDoRequest to ToDoItem (entity) 
+            var item = _mapper.Map<ToDoItem>(requestItem);
             var result = await _toDoRepository.UpdateAsync(item);
+            //converting ToDoItem (entity) to ToDOResponse
             var response = _mapper.Map<ToDoResponse>(result);
             return response;
 ;        }

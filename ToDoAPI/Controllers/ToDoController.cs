@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ToDoAPI.DAL.Entities;
 using ToDoAPI.DAL.Repositories.Interface;
+using ToDoAPI.Models.RequestModels;
 using ToDoAPI.Models.ResponseModels;
 using ToDoAPI.Services.Implementation;
 using ToDoAPI.Services.Interface;
@@ -27,7 +28,7 @@ namespace ToDoAPI.Controllers
 
             if(result == null)
             {
-                return null;
+                return NotFound();
             }
 
             return Ok(result);
@@ -47,9 +48,9 @@ namespace ToDoAPI.Controllers
 
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<ToDoResponse>> CreateAsync(ToDoItem item)
+        public async Task<ActionResult<ToDoResponse>> CreateAsync(ToDoRequest requestItem)
         {
-            var result = await _toDoService.CreateAsync(item);
+            var result = await _toDoService.CreateAsync(requestItem);
             if(result == null)
             {
                 return NotFound();
@@ -59,7 +60,7 @@ namespace ToDoAPI.Controllers
 
 
         [HttpDelete("[action]/{id}")]
-        public async Task<ActionResult<ToDoItem>> DeleteAsync(int id)
+        public async Task<ActionResult<ToDoResponse>> DeleteAsync(int id)
         {
             var result = await _toDoService.DeleteAsync(id);
 
@@ -75,9 +76,9 @@ namespace ToDoAPI.Controllers
 
         [HttpPut("[action]/{id}")]
 
-        public async Task<ActionResult<ToDoItem>> UpdateAsync(ToDoItem item)
+        public async Task<ActionResult<ToDoResponse>> UpdateAsync(ToDoRequest requestItem)
         {
-            var result = await _toDoService.UpdateAsync(item);
+            var result = await _toDoService.UpdateAsync(requestItem);
 
             if(result == null)
             {
@@ -86,6 +87,5 @@ namespace ToDoAPI.Controllers
 
             return Ok(result);
         }
-
     }
 }

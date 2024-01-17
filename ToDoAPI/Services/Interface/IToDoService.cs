@@ -1,4 +1,5 @@
 ﻿using ToDoAPI.DAL.Entities;
+using ToDoAPI.Models.RequestModels;
 using ToDoAPI.Models.ResponseModels;
 
 namespace ToDoAPI.Services.Interface
@@ -7,8 +8,8 @@ namespace ToDoAPI.Services.Interface
     {
         Task<IEnumerable<ToDoResponse>> GetToDoListAsync();
         Task<ToDoResponse> GetToDoAsync(int id);
-        Task<ToDoResponse> CreateAsync(ToDoItem item);
-        Task<ToDoResponse> UpdateAsync(ToDoItem item);
+        Task<ToDoResponse> CreateAsync(ToDoRequest item);
+        Task<ToDoResponse> UpdateAsync(ToDoRequest item);
         Task<ToDoResponse> DeleteAsync(int id);
     }
 }

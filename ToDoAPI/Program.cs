@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ToDoAPI.DAL.DbContexts;
 using ToDoAPI.DAL.Repositories.Implementation;
 using ToDoAPI.DAL.Repositories.Interface;
+using ToDoAPI.MappingProfiles;
 using ToDoAPI.Services.Implementation;
 using ToDoAPI.Services.Interface;
 
@@ -21,6 +22,10 @@ builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
 builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseSqlServer("name=DefaultConnection");
 });
+
+builder.Services.AddAutoMapper(typeof(ToDoResponseMappingProfile));
+builder.Services.AddAutoMapper(typeof(ToDoRequestMappingProfile));
+
 
 
 var app = builder.Build();
