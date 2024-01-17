@@ -5,11 +5,12 @@ using ToDoAPI.Models.ResponseModels;
 
 namespace ToDoAPI.MappingProfiles
 {
-    public class ToDoRequestMappingProfile : Profile
+    public class AutoMapperProfile : Profile
     {
-        public ToDoRequestMappingProfile()
+        public AutoMapperProfile()
         {
             CreateMap<ToDoRequest, ToDoItem>();
+            CreateMap<ToDoResponse, ToDoItem>().ReverseMap();
         }
     }
 }

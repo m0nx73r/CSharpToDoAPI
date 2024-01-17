@@ -16,61 +16,98 @@ namespace ToDoAPI.Controllers
     {
 
         private readonly IToDoService _toDoService;
-        public ToDoController(IToDoService service)
+        public ToDoController(IToDoService toDoService)
         {
-            this._toDoService = service;   
+            this._toDoService = toDoService;
         }
 
         [HttpGet("[action]")]
-        public async Task<ActionResult<IEnumerable<ToDoResponse>>> GetToDoListAsync()
+        public async Task<IActionResult> GetToDoListAsync()
         {
-            var result = await _toDoService.GetToDoListAsync();
-
-            if(result == null)
+            ApiResponse response = new ApiResponse();
+            try
             {
-                return NotFound();
-            }
+                IEnumerable<ToDoResponse> result = await _toDoService.GetToDoListAsync();
+                response.Body = result;
 
-            return Ok(result);
+                return Ok(response);
+            }
+            catch(Exception ex) {
+
+                {
+                    response.Code = "500";
+                    response.Errors = ex.ToString();
+                    response.Message = ex.Message;
+                    
+                };
+                return Ok(response);
+            }
         }
 
         [HttpGet("[action]/{id}")]
-        public async Task<ActionResult<ToDoResponse>> GetToDoAsync(int id)
+        public async Task<IActionResult> GetToDoAsync(int id)
         {
-            var result = await _toDoService.GetToDoAsync(id);
-            if (result == null)
+            ApiResponse response = new ApiResponse();
+            try
             {
-                return NotFound();
+                ToDoResponse result = await _toDoService.GetToDoAsync(id);
+                response.Body = result;
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                response.Code = "500";
+                response.Errors = ex.ToString();
+                response.Message = ex.Message;
+                return Ok(response);
             }
 
-            return Ok(result);
         }
 
 
         [HttpPost("[action]")]
         public async Task<ActionResult<ToDoResponse>> CreateAsync(ToDoRequest requestItem)
         {
-            var result = await _toDoService.CreateAsync(requestItem);
-            if(result == null)
+            ApiResponse response = new ApiResponse();
+
+
+            try
             {
-                return NotFound();
+                int result = await _toDoService.CreateAsync(requestItem);
+                response.Body = result;
+                return Ok(response);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                response.Code = "500";
+                response.Errors = ex.ToString();
+                response.Message = ex.Message;
+                return Ok(response);
+            }
         }
 
 
         [HttpDelete("[action]/{id}")]
         public async Task<ActionResult<ToDoResponse>> DeleteAsync(int id)
         {
-            var result = await _toDoService.DeleteAsync(id);
 
-            if(result == null)
+            ApiResponse response = new ApiResponse();
+
+            try
             {
-                return NotFound();
+                ToDoResponse result = await _toDoService.DeleteAsync(id);
+
+                response.Body = result;
+                return Ok(response);
+
             }
-
-            return Ok(result);
-
+            catch (Exception ex)
+            {
+                response.Code = "500";
+                response.Errors = ex.ToString();
+                response.Message = ex.Message;
+                return Ok(response);
+            }
         }
 
 
@@ -78,14 +115,20 @@ namespace ToDoAPI.Controllers
 
         public async Task<ActionResult<ToDoResponse>> UpdateAsync(ToDoRequest requestItem)
         {
-            var result = await _toDoService.UpdateAsync(requestItem);
+            ApiResponse response = new ApiResponse();
 
-            if(result == null)
+            try
             {
-                return NotFound();
+                ToDoResponse result = await _toDoService.UpdateAsync(requestItem);
+                response.Body = result;
             }
-
-            return Ok(result);
+            catch (Exception ex)
+            {
+                response.Code = "500";
+                response.Errors = ex.ToString();
+                response.Message = ex.Message;
+                return Ok(response);
+            }
         }
     }
 }

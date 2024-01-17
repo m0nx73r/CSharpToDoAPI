@@ -8,7 +8,7 @@ namespace ToDoAPI.DAL.Repositories.Interface
     {
         Task<IEnumerable<ToDoItem>> GetToDoListAsync();
         Task<ToDoItem> GetToDoAsync(int id);
-        Task<ToDoItem> CreateAsync(ToDoItem item);
+        Task<int> CreateAsync(ToDoItem item);
         Task<ToDoItem> DeleteAsync(int id);
         Task<ToDoItem> UpdateAsync(ToDoItem item);
     }

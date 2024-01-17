@@ -23,8 +23,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseSqlServer("name=DefaultConnection");
 });
 
-builder.Services.AddAutoMapper(typeof(ToDoResponseMappingProfile));
-builder.Services.AddAutoMapper(typeof(ToDoRequestMappingProfile));
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 
 
