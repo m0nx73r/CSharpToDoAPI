@@ -15,7 +15,7 @@ namespace ToDoAPI.DAL.Repositories.Implementation
         {
             _dbContext = dbContext;
         }
-        public async Task<int> CreateAsync(ToDoItem item)
+        public async Task<int> CreateAsync(ToDoEntity item)
         {
             DateTime dt = DateTime.Now;
             item.CreatedDateTime = dt;
@@ -28,9 +28,9 @@ namespace ToDoAPI.DAL.Repositories.Implementation
             return item.Id;
         }
 
-        public async Task<ToDoItem> DeleteAsync(int id)
+        public async Task<ToDoEntity> DeleteAsync(int id)
         {
-            ToDoItem todoItem = await _dbContext.TodoItems.FindAsync(id);
+            ToDoEntity todoItem = await _dbContext.TodoItems.FindAsync(id);
 
             todoItem.IsDeleted = true;
             todoItem.ModifiedDateTime = DateTime.Now;
@@ -41,22 +41,22 @@ namespace ToDoAPI.DAL.Repositories.Implementation
             return todoItem;
         }
 
-        public async Task<ToDoItem> GetToDoAsync(int id)
+        public async Task<ToDoEntity> GetToDoAsync(int id)
         {
 
-            ToDoItem result = await _dbContext.TodoItems.FindAsync(id);
+            ToDoEntity result = await _dbContext.TodoItems.FindAsync(id);
             return result;
         }
 
-        public async Task<IEnumerable<ToDoItem>> GetToDoListAsync()
+        public async Task<IEnumerable<ToDoEntity>> GetToDoListAsync()
         {
-            IEnumerable<ToDoItem> result = await _dbContext.TodoItems.Where(item => item.IsDeleted == false).ToListAsync();
+            IEnumerable<ToDoEntity> result = await _dbContext.TodoItems.Where(item => item.IsDeleted == false).ToListAsync();
             return result;
         }
 
-        public async Task<ToDoItem> UpdateAsync(ToDoItem item)
+        public async Task<ToDoEntity> UpdateAsync(ToDoEntity item)
         {
-            ToDoItem fieldToBeUpdated = await _dbContext.TodoItems.FindAsync(item.Id);
+            ToDoEntity fieldToBeUpdated = await _dbContext.TodoItems.FindAsync(item.Id);
 
             DateTime dt = DateTime.Now;
             fieldToBeUpdated.Task = item.Task;

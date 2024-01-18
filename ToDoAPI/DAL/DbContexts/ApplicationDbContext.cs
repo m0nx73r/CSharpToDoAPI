@@ -12,5 +12,5 @@ public class ApplicationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public DbSet<ToDoItem> TodoItems { get; set; }
+    public DbSet<ToDoEntity> TodoItems { get; set; }
 }

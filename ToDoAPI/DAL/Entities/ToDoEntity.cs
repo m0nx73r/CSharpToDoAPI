@@ -1,6 +1,6 @@
 ﻿namespace ToDoAPI.DAL.Entities
 {
-    public class ToDoItem
+    public class ToDoEntity
     {
         public int Id { get; set; }
         public string? Task { get; set; }

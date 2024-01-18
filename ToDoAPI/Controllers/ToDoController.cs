@@ -121,6 +121,7 @@ namespace ToDoAPI.Controllers
             {
                 ToDoResponse result = await _toDoService.UpdateAsync(requestItem);
                 response.Body = result;
+                return Ok(response);
             }
             catch (Exception ex)
             {

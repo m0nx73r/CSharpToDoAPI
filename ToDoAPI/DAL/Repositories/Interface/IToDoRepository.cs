@@ -6,10 +6,10 @@ namespace ToDoAPI.DAL.Repositories.Interface
 {
     public interface IToDoRepository
     {
-        Task<IEnumerable<ToDoItem>> GetToDoListAsync();
-        Task<ToDoItem> GetToDoAsync(int id);
-        Task<int> CreateAsync(ToDoItem item);
-        Task<ToDoItem> DeleteAsync(int id);
-        Task<ToDoItem> UpdateAsync(ToDoItem item);
+        Task<IEnumerable<ToDoEntity>> GetToDoListAsync();
+        Task<ToDoEntity> GetToDoAsync(int id);
+        Task<int> CreateAsync(ToDoEntity item);
+        Task<ToDoEntity> DeleteAsync(int id);
+        Task<ToDoEntity> UpdateAsync(ToDoEntity item);
     }
 }

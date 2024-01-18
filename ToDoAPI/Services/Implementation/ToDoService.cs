@@ -7,7 +7,7 @@ using ToDoAPI.Services.Interface;
 using AutoMapper;
 using ToDoAPI.Models.ResponseModels;
 using ToDoAPI.Models.RequestModels;
-using ToDoAPI.Models.Exceptions;
+using ToDoAPI.Exceptions;
 
 
 #nullable enable
@@ -27,17 +27,17 @@ namespace ToDoAPI.Services.Implementation
 
         public async Task<int> CreateAsync(ToDoRequest requestItem)
         {
-            ToDoItem item = _mapper.Map<ToDoItem>(requestItem);
+            ToDoEntity item = _mapper.Map<ToDoEntity>(requestItem);
             int result = await _toDoRepository.CreateAsync(item);
             return result;
         }
 
         public async Task<ToDoResponse> DeleteAsync(int id)
         {
-            ToDoItem? result = await _toDoRepository.DeleteAsync(id);
+            ToDoEntity? result = await _toDoRepository.DeleteAsync(id);
             if(result == null)
             {
-                throw new ItemNotFoundException($"No items found with the id {id}.");
+                throw new NotFoundException($"No items found with the id {id}.");
             }
             ToDoResponse response = _mapper.Map<ToDoResponse>(result);
             return response;
@@ -45,10 +45,10 @@ namespace ToDoAPI.Services.Implementation
 
         public async Task<ToDoResponse> GetToDoAsync(int id)
         {
-            ToDoItem? result = await _toDoRepository.GetToDoAsync(id);
+            ToDoEntity? result = await _toDoRepository.GetToDoAsync(id);
             if(result == null)
             {
-                throw new ItemNotFoundException($"No items found with the id {id}.");
+                throw new NotFoundException($"No items found with the id {id}.");
             }
             ToDoResponse response = _mapper.Map<ToDoResponse>(result);
             return response;
@@ -56,10 +56,10 @@ namespace ToDoAPI.Services.Implementation
 
         public async Task<IEnumerable<ToDoResponse>> GetToDoListAsync()
         {
-            IEnumerable<ToDoItem>? result = await _toDoRepository.GetToDoListAsync();
+            IEnumerable<ToDoEntity>? result = await _toDoRepository.GetToDoListAsync();
             if(result == null)
             {
-                throw new ItemNotFoundException("No items found in the Database.");
+                throw new NotFoundException("No items found in the Database.");
             }
             IEnumerable<ToDoResponse> response = _mapper.Map<IEnumerable<ToDoResponse>>(result);
             return response;
@@ -68,8 +68,8 @@ namespace ToDoAPI.Services.Implementation
         public async Task<ToDoResponse> UpdateAsync(ToDoRequest requestItem)
         {
             //converting ToDoRequest to ToDoItem (entity) 
-            ToDoItem item = _mapper.Map<ToDoItem>(requestItem);
-            ToDoItem? result = await _toDoRepository.UpdateAsync(item);
+            ToDoEntity item = _mapper.Map<ToDoEntity>(requestItem);
+            ToDoEntity? result = await _toDoRepository.UpdateAsync(item);
             //converting ToDoItem (entity) to ToDoResponse
             ToDoResponse response = _mapper.Map<ToDoResponse>(result);
             return response;

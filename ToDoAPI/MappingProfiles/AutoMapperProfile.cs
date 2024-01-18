@@ -9,8 +9,8 @@ namespace ToDoAPI.MappingProfiles
     {
         public AutoMapperProfile()
         {
-            CreateMap<ToDoRequest, ToDoItem>();
-            CreateMap<ToDoResponse, ToDoItem>().ReverseMap();
+            CreateMap<ToDoRequest, ToDoEntity>();
+            CreateMap<ToDoResponse, ToDoEntity>().ReverseMap();
         }
     }
 }
