@@ -1,5 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using ToDoAPI;
+using ToDoAPI.DAL.DbContexts;
+using ToDoAPI.DAL.Repositories.Implementation;
+using ToDoAPI.DAL.Repositories.Interface;
+using ToDoAPI.MappingProfiles;
+using ToDoAPI.Services.Implementation;
+using ToDoAPI.Services.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +15,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddScoped<IToDoService, ToDoService>();
+builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseSqlServer("name=DefaultConnection");
 });
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
 
 
 var app = builder.Build();
